@@ -1,0 +1,26 @@
+[[project]]
+name = "Ars Antiqua"
+desc = "Software tools for analyzing, visualizing, and comparing 13th-century music"
+tags = ["wip", "rust", "tauri", "surrealdb", "nix"]
+links = [
+    {name = "website", url = "ars-antiqua.app"},
+    {name = "github", url = "https://github.com/21CSM/ars-antiqua"}
+]
+
+[[project]]
+name = "Bridge"
+desc = "Software tools for crowdsourcing knowledge"
+tags = ["ideation", "rust", "tauri", "nix"]
+links = [
+    {name = "website", url = "https://bridge.zero2one.tech"},
+    {name = "github", url = "https://github.com/zero2one-tech/bridge"},
+]
+
+[[project]]
+name = "Gate"
+desc = "Software tools for sovereign hosting"
+tags = ["ideation", "nix"]
+links = [
+    {name = "website", url = "https://gate.zero2one.tech"},
+    {name = "github", url = "https://github.com/zero2one-tech/gate"},
+]

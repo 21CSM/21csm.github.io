@@ -1,0 +1,12 @@
+# Zola
+public
+
+# Nix
+result
+result-*
+
+# direnv
+.direnv/
+
+# macOS
+.DS_Store
