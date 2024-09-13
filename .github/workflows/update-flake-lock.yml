@@ -1,0 +1,37 @@
+name: Update flake.lock
+
+on:
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+jobs:
+  lockfile:
+    name: Run update
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Run the Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Check flake
+        uses: DeterminateSystems/flake-checker-action@main
+
+      - name: Update flake.lock
+        uses: DeterminateSystems/update-flake-lock@main
+        with:
+          commit-msg: "build(nix): update flake.lock"
+          pr-assignees: 21CSM
+          pr-reviewers: 21CSM
+          pr-title: "Update flake.lock"
+          
