@@ -17,16 +17,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
-
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
-
       - name: Run the Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@main
-
-      - name: Check flake
+      - name: Check flake health
         uses: DeterminateSystems/flake-checker-action@main
-
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@main
         with:
