@@ -26,8 +26,8 @@ jobs:
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v24
         with:
-          commit-msg: "build(nix): update flake.lock"
+          commit-msg: "build(flake): update flake.lock"
           pr-assignees: 21CSM
           pr-reviewers: 21CSM
-          pr-title: "Update flake.lock"
+          pr-title: "build(flake): update flake.lock"
           
