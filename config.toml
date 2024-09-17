@@ -50,6 +50,7 @@ links = [                             # Your links
 ]
 
 homepage_layout = "about"             # "about" | "list" | "recent"
+force_theme = "light"                 # specific theme
 
 recent_max = 15
 recent_more = true
