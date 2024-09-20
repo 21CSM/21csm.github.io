@@ -1,9 +1,9 @@
 [[project]]
 name = "Ars Antiqua"
 desc = "Software tools for analyzing, visualizing, and comparing 13th-century music"
-tags = ["wip", "rust", "tauri", "react", "sqlite", "nix"]
+tags = ["wip", "typescript", "react", "firebase", "nix"]
 links = [
-    {name = "website", url = "ars-antiqua.app"},
+    {name = "website", url = "ars-antiqua.online"},
     {name = "github", url = "https://github.com/21CSM/ars-antiqua"}
 ]
 
