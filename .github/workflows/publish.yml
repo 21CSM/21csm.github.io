@@ -33,7 +33,7 @@ jobs:
         with:
           submodules: recursive
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: DeterminateSystems/nix-installer-action@v17
       - name: Run the Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v9
       - name: Build with Nix
