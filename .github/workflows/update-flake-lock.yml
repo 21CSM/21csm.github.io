@@ -24,7 +24,7 @@ jobs:
       - name: Check flake health
         uses: DeterminateSystems/flake-checker-action@v9
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@v24
+        uses: DeterminateSystems/update-flake-lock@v25
         with:
           commit-msg: "build(flake): update flake.lock"
           pr-assignees: 21CSM
