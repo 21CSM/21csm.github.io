@@ -20,7 +20,7 @@ jobs:
         with:
           submodules: recursive
       - name: Check flake health
-        uses: DeterminateSystems/flake-checker-action@v9
+        uses: DeterminateSystems/flake-checker-action@v10
         with:
           fail-mode: true
 
