@@ -2,18 +2,28 @@
 
 {% block page %}category-list{% endblock page%}
 {% block lang -%}
-{% set blog_section_path = config.extra.blog_section_path | trim_start_matches(pat="/") %}
+{% set blog_section_path = config.extra.blog_section_path | trim_start(pat="/") %}
 {% set section_md_path = blog_section_path ~ "/_index.md"%}
 {% set section = get_section(path=section_md_path, metadata_only=true) %}
 {%- if section.extra.lang %}{{ section.extra.lang }}{% else %}{{ lang }}{% endif -%}
 {%- endblock lang %}
 {% block title %}Categories{% endblock title %}
+{% block desc %}
+  {%- set blog_section_path = config.extra.blog_section_path | trim_start(pat="/") -%}
+  {%- set section = get_section(path=blog_section_path ~ "/_index.md", metadata_only=true) -%}
+  {%- if section.extra.lang %}{% set og_lang = section.extra.lang %}{% else %}{% set og_lang = lang %}{% endif -%}
+  {{ <seo config
+      title="Categories"
+      desc="Categories"
+      url={current_url | default(value="")}
+      lang={og_lang} /> }}
+{% endblock desc %}
 
 {% block content %}
-{% include "_header.html" %}
 <div id="wrapper">
+  {{ <back_link path={get_url(path="/")} config /> }}
   <main>
-    <div class="title">Categories</div>
+    <h1 class="title">Categories</h1>
     <div class="tags">
       {% for category in terms -%}
       <a class="instant" href="{{ category.permalink }}">{{ category.name }}</a>

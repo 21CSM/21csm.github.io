@@ -1,0 +1,37 @@
+name: Links
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lychee:
+    name: Check links
+    runs-on: ubuntu-latest
+    # Report broken links without blocking the Pages deploy.
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31.11.3
+        with:
+          github_access_token: ${{ github.token }}
+      - name: Build
+        run: nix build '.?submodules=1#'
+      - name: Copy site out of the Nix store
+        run: cp -aL result _site
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2.9.0
+        with:
+          args: --no-progress --root-dir _site --remap "https://21csm.github.io/ file://${{ github.workspace }}/_site/" --index-files index.html _site
+          fail: true

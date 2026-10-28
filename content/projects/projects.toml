@@ -1,0 +1,18 @@
+layout = "card"
+flow = "stack"
+
+[[item]]
+title = "Ars Antiqua"
+content = "Software tools for analyzing, visualizing, and comparing 13th-century music"
+tags = ["wip", "svelte", "typescript", "firebase", "nix"]
+link = "https://ars-antiqua.web.app/"
+
+[[item]]
+title = "Bridge"
+content = "Software tools for crowdsourcing knowledge"
+tags = ["ideation", "rust", "axum", "svelte", "nix"]
+
+[[item]]
+title = "Gate"
+content = "Software tools for sovereign hosting"
+tags = ["ideation", "rust", "tauri", "svelte", "typescript", "nix"]
