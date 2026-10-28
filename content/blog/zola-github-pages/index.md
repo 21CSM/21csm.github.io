@@ -38,7 +38,7 @@ This article is a bit *meta*, but it explains how this blog is deployed and host
 
 To better understand the entire process, let's look at a visual representation of the workflow:
 
-{% mermaid() %}
+{% <mermaid> %}
 flowchart LR
     A[Local Development] --> B[GitHub Repository]
     B --> C[GitHub Actions]
@@ -52,7 +52,7 @@ flowchart LR
     style A fill:#f9d71c,stroke:#333,stroke-width:2px
     style C fill:#8da0cb,stroke:#333,stroke-width:2px
     style F fill:#66c2a5,stroke:#333,stroke-width:2px
-{% end %}
+{% </mermaid> %}
 
 Now, let's walk through each step to get your site live.
 
@@ -90,16 +90,14 @@ Visit the URL printed in your terminal (usually http://127.0.0.1:1111) to see yo
 
 ![img](zola-default-page.webp)
 
-{% tip() %}
-By default Zola will serve on ```http://127.0.0.1:1111```, but you can change the interface and port with the ```--interface``` and ```--port``` flags respectively.
-{% end %}
+> [!TIP]
+> By default Zola will serve on ```http://127.0.0.1:1111```, but you can change the interface and port with the ```--interface``` and ```--port``` flags respectively.
 
 ### 2. Setting up a Nix Flake
 
 Create a file named ```flake.nix``` in your project root with the following content:
 
-{% codeblock(name="flake.nix") %}
-```nix,linenos
+```nix,linenos,name=flake.nix
 {
   description = "Zola site built with Nix";
 
@@ -129,11 +127,10 @@ Create a file named ```flake.nix``` in your project root with the following cont
     );
 }
 ```
-{% end %}
 
 This flake defines both a development environment and a build process for your Zola site.
 
-{% detail(title="Detailed Flake Summary") %} 
+{% <detail title="Detailed Flake Summary"> %} 
 
 Let's break down the key parts of this Nix flake:
 
@@ -151,7 +148,7 @@ Let's break down the key parts of this Nix flake:
 
 This setup allows for consistent development and build environments across different machines.
 
-{% end %}
+{% </detail> %}
 
 To use the development environment:
 
@@ -177,8 +174,8 @@ nix build
 
 Create a file at ```.github/workflows/publish.yml``` with the following content:
 
-{% codeblock(name=".github/workflows/publish.yml") %}
-```yaml,linenos
+{% raw %}
+```yaml,linenos,name=.github/workflows/publish.yml
 name: Publish
 
 on:
@@ -224,11 +221,11 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@main
 ```
-{% end %}
+{% endraw %}
 
 This workflow builds your site using Nix and deploys it to GitHub Pages whenever you push to the ```main``` branch.
 
-{% detail(title="Detailed GitHub Actions Summary") %} 
+{% <detail title="Detailed GitHub Actions Summary"> %} 
 
 Let's break down the key components of this GitHub Actions workflow:
 
@@ -243,11 +240,12 @@ Let's break down the key components of this GitHub Actions workflow:
     - **deploy**:
         - Runs only after the build job succeeds.
         - Deploys the built site to GitHub Pages.
-{% end %}
+{% </detail> %}
 
 This workflow automates the entire process from pushing changes to your repository to having those changes live on your site.
 
-{% note() %} Note the ```submodules: recursive``` parameter in the checkout step and also the flag ```'.?submodules=1#'``` passed in ```nix build```. This is crucial if you're using a Zola theme as a Git submodule, ensuring it's properly included in the build. {% end %}
+> [!NOTE]
+> Note the ```submodules: recursive``` parameter in the checkout step and also the flag ```'.?submodules=1#'``` passed in ```nix build```. This is crucial if you're using a Zola theme as a Git submodule, ensuring it's properly included in the build.
 
 
 ### 4. GitHub Pages
@@ -282,12 +280,12 @@ Always test changes locally with ```zola serve``` before pushing to GitHub.
 
 You now have a Zola site that automatically builds and deploys to GitHub Pages using Nix and GitHub Actions. This setup provides reproducible builds, automated deployments, and free hosting.
 
-The [source code for this site]((https://github.com/21CSM/21csm.github.io)) can serve as a reference for your own projects.
+The [source code for this site](https://github.com/21CSM/21csm.github.io) can serve as a reference for your own projects.
 
 ## Further Reading
 
 - [Zola Documentation](https://www.getzola.org/documentation/getting-started/overview/)
-- [Nix Manual](https://nixos.org/manual/nix/stable/)
+- [Nix Manual](https://nix.dev/manual/nix/stable/)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [Markdown Guide](https://www.markdownguide.org/)
-- [Learn Tera Templating](https://tera.netlify.app/docs/)
+- [Learn Tera Templating](https://keats.github.io/tera/)

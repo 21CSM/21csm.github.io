@@ -2,26 +2,37 @@
 
 {% block page %}category-single{% endblock page %}
 {% block lang -%}
-{% set blog_section_path = config.extra.blog_section_path | trim_start_matches(pat="/") %}
+{% set blog_section_path = config.extra.blog_section_path | trim_start(pat="/") %}
 {% set section_md_path = blog_section_path ~ "/_index.md"%}
 {% set section = get_section(path=section_md_path, metadata_only=true) %}
 {%- if section.extra.lang %}{{ section.extra.lang }}{% else %}{{ lang }}{% endif -%}
 {%- endblock lang %}
-{% block title %}{{ section.title }}{% endblock title %}
+{% block title %}{{ term.name }}{% endblock title %}
+{% block desc %}
+  {%- set blog_section_path = config.extra.blog_section_path | trim_start(pat="/") -%}
+  {%- set section = get_section(path=blog_section_path ~ "/_index.md", metadata_only=true) -%}
+  {%- if section.extra.lang %}{% set og_lang = section.extra.lang %}{% else %}{% set og_lang = lang %}{% endif -%}
+  {{ <seo config
+      title={term.name}
+      desc={term.name}
+      url={term.permalink}
+      lang={og_lang} /> }}
+{% endblock desc %}
 
 {% block content %}
-{% include "_header.html" %}
 <div id="wrapper">
+  {% set categories_taxonomy = get_taxonomy(kind="categories") %}
+  {{ <back_link path={categories_taxonomy.permalink} config /> }}
   <main class="layout-list">
     <div class="title">
       <span>{{ term.name }}</span>
-      <a class="instant" href="{{ config.base_url ~ '/categories' }}">All Categories</a>
     </div>
     <div class="post-list">
+      {% set date_format = section.extra.date_format if section.extra.date_format is defined else (config.extra.date_format if config.extra.date_format is defined else "%Y-%m-%d") %}
       {% for post in term.pages %}
       <a class="post instant {% if post.extra.featured %}featured{% endif %}" href="{{ post.permalink }}">
         <span>{{ post.title }}</span>
-        <span class="date">{{ post.date | date }}</span>
+        <span class="date">{{ post.date | date(format=date_format) }}</span>
       </a>
       {% endfor %}
     </div>
