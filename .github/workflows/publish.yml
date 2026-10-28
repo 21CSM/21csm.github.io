@@ -11,16 +11,18 @@ permissions:
   id-token: write
   deployments: write
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   flake-health-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
+        uses: actions/checkout@v5
       - name: Check flake health
-        uses: DeterminateSystems/flake-checker-action@v9
+        uses: DeterminateSystems/flake-checker-action@v14
         with:
           fail-mode: true
 
@@ -29,18 +31,17 @@ jobs:
     needs: flake-health-check
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
-      - name: Run the Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v9
+        uses: cachix/install-nix-action@v31.11.3
+        with:
+          github_access_token: ${{ github.token }}
       - name: Build with Nix
-        run: |
-          nix build '.?submodules=1#'  
+        run: nix build '.?submodules=1#'
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./result
 
@@ -54,5 +55,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
-
+        uses: actions/deploy-pages@v5
