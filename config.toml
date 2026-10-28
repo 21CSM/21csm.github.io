@@ -1,6 +1,9 @@
-# serene v4.0.0
+# serene v4.3.0
 #
-# - docs: https://github.com/isunjn/serene/blob/latest/USAGE.md
+# Held here on purpose. Serene 5+ redesigns the theme, and Serene 6 requires
+# Zola 0.23, which removed the shortcodes used by posts on this site.
+#
+# - docs: https://github.com/isunjn/serene/blob/v4.3.0/USAGE.md
 # - check for updates: https://github.com/isunjn/serene/releases
 #
 #=========================================================================================
@@ -85,7 +88,7 @@ outdate_alert_days = 120              # How many days will a post be outdated by
 outdate_alert_text_before = "This article was last updated "
 outdate_alert_text_after = " days ago and may be out of date."
 
-footer_copyright = "© 2024 21CSM"
+footer_copyright = "© 2026 21CSM"
 footer_credits = true                 # Whether to show "powered by zola and serene" in footer
 
 not_found_title = "404"

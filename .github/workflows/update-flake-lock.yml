@@ -12,22 +12,22 @@ jobs:
 
     permissions:
       contents: write
+      issues: write
       pull-requests: write
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
-      - name: Run the Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v9
+        uses: cachix/install-nix-action@v31.11.3
+        with:
+          github_access_token: ${{ github.token }}
       - name: Check flake health
-        uses: DeterminateSystems/flake-checker-action@v9
+        uses: DeterminateSystems/flake-checker-action@v14
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@v24
+        uses: DeterminateSystems/update-flake-lock@v29
         with:
           commit-msg: "build(flake): update flake.lock"
           pr-assignees: 21CSM
           pr-reviewers: 21CSM
           pr-title: "build(flake): update flake.lock"
-          
