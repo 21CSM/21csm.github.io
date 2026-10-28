@@ -33,5 +33,5 @@ jobs:
       - name: Check links
         uses: lycheeverse/lychee-action@v2.9.0
         with:
-          args: --no-progress --root-dir _site --remap "https://21csm.github.io ${{ github.workspace }}/_site" _site
+          args: --no-progress --root-dir _site --remap "https://21csm.github.io/ file://${{ github.workspace }}/_site/" --index-files index.html _site
           fail: true
