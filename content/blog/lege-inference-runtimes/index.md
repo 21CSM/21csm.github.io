@@ -18,6 +18,8 @@ I'd started with [tract](https://github.com/sonos/tract) without measuring anyth
 
 **The short answer:** ONNX Runtime, using Microsoft's own build. It was the fastest by a wide margin on one Linux thread, and it passed every requirement, but only Microsoft's build did. The copy I'd been using, built by Nix, changed one number in the output at exactly four threads on my laptop, and that alone would have ruled it out.
 
+**Update, 10 November 2026:** I repeated everything with PP-OCRv6, the newer generation of the networks. Lege stays on PP-OCRv5, and the library choice stands. But with the new networks, Microsoft's ONNX Runtime build also changed its output with the thread count, on three of six model sets. That makes the thread-count check something to repeat on every change, not something you settle once. [Details below](#update-repeated-with-pp-ocrv6).
+
 ## The rules, written down first
 
 Lege has to run on cheap and old computers, not just my laptop. So the requirements were:
@@ -112,6 +114,39 @@ So **Lege will use ONNX Runtime, shipping Microsoft's official build**, pinned b
 It isn't free. Lege stops being one self-contained binary: it now ships a 28 MB C++ library, and its output depends on a build I don't compile. To keep the "same output" promise honest, the thread-count check becomes part of Lege's CI on every supported machine, with the exact library it ships, and no ONNX Runtime upgrade lands without passing it.
 
 One caveat on the speed numbers: I timed the Nix build. Microsoft's build was checked for correct and identical output, not timed. It's the same version, and ONNX Runtime's lead is over 40%, so I'd be surprised if that changed the ranking, but I haven't measured it. If shipping the C++ library turns out to be impractical somewhere, the rule's runner-up is RTen: pure Rust, nothing extra to ship, and about 12% faster than tract on one thread.
+
+## Update: repeated with PP-OCRv6
+
+Baidu released PP-OCRv6 in June 2026, in three sizes: tiny, small and medium. Before calling the choice done, I reran the whole comparison with it. I had two questions: should Lege switch models, and does the library decision survive networks it wasn't measured on?
+
+There's a catch for Lege first. PP-OCRv6 has no Latin-only text reader. Its dictionaries are 85–89% Chinese characters, against the 836-character Latin dictionary Lege uses now. So I also tried a **hybrid**: the new v6 line finder paired with Lege's current v5 Latin reader.
+
+**Should Lege switch? No.**
+
+| Models | Error rate, synthetic lines | Error rate, scanned pages | 1 Linux thread, ONNX Runtime |
+|---|---|---|---|
+| v5 (current) | 0.0020 | 0.0026 | 64.5 s |
+| v6 small | 0.0030 | 0.0043 | 77.7 s |
+| v6 line finder + v5 reader | 0.0020 | 0.0021 | 68.2 s |
+
+The error rate is the share of characters read wrong. The scanned-page transcriptions were made by checking v5's output against the book, so they lean towards v5. I left out one 31-character page, where a single word outweighs every other difference.
+
+- **v6 small reads slightly worse than v5** on these Latin-script pages, and it's slower.
+- **The hybrid reads as well as v5, at about the same speed.** The reader takes most of the time, so a new line finder barely changes it. But its output differs on 18 of the 25 test images, so switching would mean re-approving every snapshot for no measurable gain.
+- **v6 tiny is twice as fast, but its line finder garbles a perfectly clean synthetic line.** That rules it out as a default.
+- **v6 medium is 3–7 times slower than v5 on one thread.** With tract it peaked at 4.6 GB, more than twice the limit.
+
+**Does the library choice survive?** The order didn't change. ONNX Runtime was still 35–45% faster than the other two on one Linux thread. All three libraries ran on the emulated old CPUs and read exactly the same text as each other.
+
+**The thread-count check is where it got interesting.** tract and RTen gave the same output at every thread count, in every run, with every model set, as they had with v5. Microsoft's ONNX Runtime build, which had passed everywhere with v5, did not:
+
+- With v6 tiny on my M3 Pro, one page changed at 4, 6 and 8 threads.
+- With v6 small on GitHub's ARM64 runner, one page changed at 2 threads and above.
+- With the hybrid tiny on the same runner, one page changed at 8 threads.
+
+So whether ONNX Runtime keeps the same output at every thread count depends on the networks, not just on the build. Passing with one model says little about the next. Under my rule, Lege would rule out ONNX Runtime if it moved to v6 small, and pick RTen.
+
+The decision stays, because Lege stays on v5. What changes is how much it can bear. The thread-count check has to run in CI for every model change and every ONNX Runtime upgrade, on every machine; adding that is next. RTen remains the fallback: pure Rust, and it passed every check with both generations of networks.
 
 ## Caveats
 
