@@ -19,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Install Nix
-        uses: cachix/install-nix-action@v31.11.3
+        uses: cachix/install-nix-action@v31.11.5
         with:
           github_access_token: ${{ github.token }}
       - name: Check flake health
